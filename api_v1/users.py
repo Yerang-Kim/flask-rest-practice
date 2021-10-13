@@ -29,3 +29,20 @@ def users():
     users = User.query.all()
 
     return jsonify([user.serialize for user in users])
+
+@api.route('/users/<uid>', methods=['GET', 'PUT', 'DELETE'])
+def user_detail(uid):
+    if request.method == 'GET':
+        user = User.query.filter(User.id == uid).first()
+        return jsonify(user.serialize)
+    elif request.method == 'DELETE':
+        User.query.delete(User.id == uid)
+        return jsonify(), 204
+    else:
+        data = request.get_json()
+
+        User.query.filter(User.id == uid).update(data)
+        user = User.query.filter(User.id == uid).first()
+
+        return jsonify(user.serialize) 
+
