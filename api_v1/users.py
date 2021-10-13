@@ -1,8 +1,10 @@
 from flask import jsonify, request
+from flask_jwt import jwt_required
 from models import User, db
 from . import api
 
 @api.route('/users', methods=['GET', 'POST'])
+@jwt_required()
 def users():
     if request.method == 'POST':
         print(request)
